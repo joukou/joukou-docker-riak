@@ -1,0 +1,64 @@
+#!/bin/bash
+# Copyright 2014 Joukou Ltd
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# This script starts Basho Riak 2.x in a Docker container after some basic
+# initial configuration.
+#
+# Riak will listen on the eth0 interface which is the interface through which a
+# container speaks to the bridge.
+#
+# To set the Erlang cookie for Riak clustering override RIAK_COOKIE
+
+# fail hard and fast even on pipelines
+set -eo pipefail
+
+# set debug based on envvar
+[[ $DEBUG ]] && set -x
+
+# retrieve IPv4 address assigned to the given interface
+function get_iface_v4_addr {
+  local iface="${1}"
+  ip -o -4 addr list "${iface}" 2> /dev/null | \
+      awk '{print $4}' | \
+      cut -d/ -f1
+}
+
+function main {
+
+  # configure Basho Riak
+  export FQDN=$(hostname -f)
+  export RIAK_IPV4=$(get_iface_v4_addr "eth0")
+  export RIAK_HTTP_ADDR="${RIAK_IPV4}:8098"
+  export RIAK_PROTOBUF_ADDR="${RIAK_IPV4}:8087"
+  export RIAK_NODENAME="riak@${FQDN}"
+
+  # set riak data and log directory permissions
+  chown -R riak:riak /var/lib/riak /var/log/riak
+  chmod 755 /var/lib/riak /var/log/riak
+
+  # update riak.conf
+  cat /etc/riak/riak.conf.tmpl | envsubst "$(cat /etc/riak/riak.conf.envsubst | tr '\n' ' ')" \
+    > /etc/riak/riak.conf
+
+  # check riak.conf
+  riak chkconfig
+
+  # start riak
+  exec /sbin/setuser riak "$(ls -d /usr/lib/riak/erts*)/bin/run_erl" "/tmp/riak" \
+   "/var/log/riak" "exec /usr/sbin/riak console"
+}
+
+main
