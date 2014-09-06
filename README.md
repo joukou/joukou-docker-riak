@@ -2,21 +2,31 @@ Basho Riak Dockerfile for CoreOS
 ================================
 [![Build Status](https://circleci.com/gh/joukou/joukou-docker-riak/tree/develop.png?circle-token=992aeaf31e42912f39b24dddfa3e8f54ae1c9fbe)](https://circleci.com/gh/joukou/joukou-docker-riak/tree/develop) [![Docker Repository on Quay.io](https://quay.io/repository/joukou/riak/status?token=7d2526bc-fd95-49a4-9caf-91ae6400382c "Docker Repository on Quay.io")](https://quay.io/repository/joukou/riak) [![Apache 2.0](http://img.shields.io/badge/License-apache%202.0-brightgreen.svg)](#license) [![Stories in Ready](https://badge.waffle.io/joukou/joukou-docker-riak.png?label=ready&title=Ready)](http://waffle.io/joukou/joukou-docker-riak)
 
-[Basho Riak 2.0](http://docs.basho.com/riak/2.0.0/) Dockerfile.
+[Basho Riak 2.0](http://docs.basho.com/riak/2.0.0/) Dockerfile for
+[CoreOS](https://coreos.com/).
 
 ## Goal
 
-To create a general purpose production ready Basho Riak 2.0 Dockerfile and associated image, that may be used for commercial purposes.
+To create a general purpose production ready Basho Riak 2.0 Dockerfile and
+associated image, that may be used for commercial purposes.
 
-There are many different ways of doing things within the Docker eco-system. This project was started by users of [CoreOS](https://coreos.com) and as such will always prefer solutions based around the associated technology such as [fleet](https://github.com/coreos/fleet), [etcd](https://github.com/coreos/etcd) and [rudder](https://coreos.com/blog/introducing-rudder/).
+There are many different ways of doing things within the Docker eco-system. This
+project was started by users of [CoreOS](https://coreos.com) and as such will
+always prefer solutions based around the associated technology such as
+[fleet](https://github.com/coreos/fleet), [etcd](https://github.com/coreos/etcd)
+and [rudder](https://coreos.com/blog/introducing-rudder/).
 
-Hector Castro at Basho has an awesome [project to bring up a Riak cluster on Docker](https://github.com/hectcastro/docker-riak). The main differentiation of this project is the complete focus on [CoreOS](https://coreos.com). Phusion Baseimage is also not used, the reasons for that are covered in the [base Dockerfile project](https://github.com/joukou/joukou-docker-base).
+Hector Castro at Basho has an awesome [project to bring up a Riak cluster on Docker](https://github.com/hectcastro/docker-riak).
+The main differentiation of this project is the complete focus on
+[CoreOS](https://coreos.com). Phusion Baseimage is also not used, the reasons
+for that are covered in the
+[base Dockerfile project](https://github.com/joukou/joukou-docker-base).
 
 ## Status
 
 In development. Collaboration and pull requests welcome!
 
-## Pull Image
+## Docker Image
 
 `docker pull quay.io/joukou/riak`
 
@@ -24,13 +34,17 @@ In development. Collaboration and pull requests welcome!
 
 [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
 
-## Usage
+## Usage With Fleet
 
-### With Fleet
+Upload the template units to the cluster without starting them:
 
-See [joukou/joukou-fleet-riak](https://github.com/joukou-fleet-riak) for associated Fleet units.
+`fleetctl submit riak\@.service`
 
-### Without Fleet
+Start as many instances as you require:
+
+`fleetctl start riak@1.service riak@2.service riak@3.service`
+
+## Usage Without Fleet
 
 ```
 docker run --name riak-config \
@@ -56,9 +70,11 @@ quay.io/joukou/riak
 | 8099      | intra-cluster | Intra-Cluster Handoff                 |
 | 8985      | intra-cluster | Solr JMX                              |
 
-`intra-cluster` means that, in my opinion, none of these ports should be directly exposed to the public internet.
+`intra-cluster` means that, in my opinion, none of these ports should be
+directly exposed to the public internet.
 
-If, for example, you want to expose the riak control web interface setup a reverse proxy container for that purpose.
+If, for example, you want to expose the riak control web interface setup a
+reverse proxy container for that purpose.
 
 ## Contributors
 

@@ -1,0 +1,87 @@
+# Copyright 2014 Joukou Ltd
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+[Unit]
+Description=Basho Riak distributed key/value store
+Documentation=http://docs.basho.com/riak/2.0.0/
+After=docker.service
+Requires=docker.service
+After=etcd.service
+Requires=etcd.service
+
+[Service]
+# Run as root because
+# - systemd-docker requires root privileges
+# - /root/.dockercfg for registry authentication
+User=root
+# sd_notify(3) is required by systemd-docker
+Type=notify
+NotifyAccess=all
+# Large start timeout is to allow for pulling down Docker images from quay.io
+TimeoutStartSec=12min
+TimeoutStopSec=15
+# On failures try to restart every 10 seconds rate limiting to 5 attempts every 10 minutes
+Restart=on-failure
+RestartSec=10s
+StartLimitInterval=600
+StartLimitBurst=5
+
+EnvironmentFile=/etc/environment
+LimitNOFILE=65536
+
+# Installs systemd-docker before the service is started
+ExecStartPre=/usr/bin/docker run --rm -v /opt/bin:/opt/bin ibuildthecloud/systemd-docker
+
+# Generates configuration file(s) before the service is started
+# Set epmd to listen on a non-default port as RabbitMQ would otherwise conflict
+# with Basho Riak. epmd must be listening on the same port for all nodes in the
+# cluster.
+# http://www.erlang.org/doc/man/epmd.html
+ExecStartPre=/usr/bin/docker pull quay.io/joukou/riak-config
+ExecStartPre=/usr/bin/docker run --rm \
+-e "ERL_EPMD_PORT=4370" \
+-e "RIAK_NODENAME=riak@${COREOS_PUBLIC_IPV4}" \
+-e "RIAK_SEARCH=off" \
+-v /etc/%p:/etc/riak \
+quay.io/joukou/riak-config
+
+# Kills and removes existing container before the service is started
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+
+# Pulls the latest image before the service is started
+ExecStartPre=/usr/bin/docker pull quay.io/joukou/riak
+
+ExecStart=/opt/bin/systemd-docker run --name %p \
+-e "ERL_EPMD_PORT=4370" \
+-h riak.%H \
+-v /etc/%p:/etc/riak \
+-v /var/lib/riak:/var/lib/riak \
+-v /var/log/riak:/var/log/riak \
+-p 4370:4370 \
+-p 8088:8088 \
+-p 8089:8089 \
+-p 8090:8090 \
+-p 8091:8091 \
+-p 8092:8092 \
+-p 8099:8099 \
+quay.io/joukou/riak
+
+ExecStop=/usr/bin/docker kill %p
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+X-ConditionMachineOf=cadvisor@%i.service
+X-Conflicts=riak@*.service
