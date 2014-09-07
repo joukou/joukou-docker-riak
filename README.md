@@ -7,8 +7,8 @@ Basho Riak Dockerfile for CoreOS
 
 ## Goal
 
-To create a general purpose production ready Basho Riak 2.0 Dockerfile and
-associated image, that may be used for commercial purposes.
+To create a production ready Basho Riak 2.0 Dockerfile and associated image,
+that may be used for commercial purposes.
 
 There are many different ways of doing things within the Docker eco-system. This
 project was started by users of [CoreOS](https://coreos.com) and as such will
@@ -24,7 +24,7 @@ for that are covered in the
 
 ## Status
 
-In development. Collaboration and pull requests welcome!
+Unstable. In development. Collaboration and pull requests welcome!
 
 ## Docker Image
 
@@ -32,7 +32,7 @@ In development. Collaboration and pull requests welcome!
 
 ## Base Image
 
-[`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
+See [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
 
 ## Usage With Fleet
 
@@ -57,6 +57,14 @@ docker run --name riak \
 -v /var/log/riak:/var/log/riak \
 quay.io/joukou/riak
 ```
+
+## Volumes
+
+| Location | Purpose |
+| -------- | ------- |
+| `/etc/riak` | Should contain `riak.conf` and `solr-log4j.properties` |
+| `/var/log/riak` | Riak logs |
+| `/var/lib/riak` | Riak data. The ephemeral nature of Docker containers aside, it is simply not efficient to store data on the union file system. |
 
 ## Exposed Ports
 
