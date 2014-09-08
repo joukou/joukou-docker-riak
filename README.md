@@ -70,3 +70,6 @@ Copyright &copy; 2009-2014 Joukou Ltd.
 
 Basho Riak Dockerfile for CoreOS is under the Apache 2.0 license. See the
 [LICENSE](LICENSE) file for details.
+
+Some parts have been derived from code developed at Basho Technologies, and can
+also be found in the [docker-riak sources](https://github.com/hectcastro/docker-riak).
