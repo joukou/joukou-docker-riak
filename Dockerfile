@@ -16,9 +16,6 @@ MAINTAINER Isaac Johnston <isaac.johnston@joukou.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Adds supervisord config
-ADD etc/supervisord.d/riak.conf /etc/supervisord.d/
-
 # Install Basho Riak
 WORKDIR /tmp
 RUN curl -LO http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.0/debian/7/riak_2.0.0-1_amd64.deb && \
@@ -37,3 +34,11 @@ VOLUME [ "/var/lib/riak", "/var/log/riak" ]
 #   8099        intra-cluster   Intra-Cluster Handoff
 #   8985        intra-cluster   Solr JMX
 EXPOSE 4370 8087 8088 8089 8090 8091 8092 8093 8098 8099 8985
+
+ENTRYPOINT \
+  chown riak:riak /var/lib/riak /var/log/riak && \
+  chmod 755 /var/lib/riak /var/log/riak && \
+  ulimit -n 4096 && \
+  sed -i.bak "s/riak@127.0.0.1/riak@$(ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)/" /etc/riak/riak.conf && \
+  exec /sbin/setuser riak "$(ls -d /usr/lib/riak/erts*)/bin/run_erl" "/tmp/riak" \
+   "/var/log/riak" "exec /usr/sbin/riak console"
