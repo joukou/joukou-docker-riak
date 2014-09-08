@@ -1,6 +1,6 @@
 Basho Riak Dockerfile for CoreOS 
 ================================
-[![Build Status](https://circleci.com/gh/joukou/joukou-docker-riak/tree/develop.png?circle-token=992aeaf31e42912f39b24dddfa3e8f54ae1c9fbe)](https://circleci.com/gh/joukou/joukou-docker-riak/tree/develop) [![Docker Repository on Quay.io](https://quay.io/repository/joukou/riak/status?token=7d2526bc-fd95-49a4-9caf-91ae6400382c "Docker Repository on Quay.io")](https://quay.io/repository/joukou/riak) [![Apache 2.0](http://img.shields.io/badge/License-apache%202.0-brightgreen.svg)](#license) [![Stories in Ready](https://badge.waffle.io/joukou/joukou-docker-riak.png?label=ready&title=Ready)](http://waffle.io/joukou/joukou-docker-riak) [![IRC](http://img.shields.io/badge/IRC-%23joukou-blue.svg)](irc://irc.freenode.org:6667/#joukou) [![Analytics](https://ga-beacon.appspot.com/UA-41911221-2/joukou-docker-riak/readme)](https://github.com/igrigorik/ga-beacon)
+[![Build Status](https://circleci.com/gh/joukou/joukou-docker-riak/tree/develop.png?circle-token=992aeaf31e42912f39b24dddfa3e8f54ae1c9fbe)](https://circleci.com/gh/joukou/joukou-docker-riak/tree/develop) [![Docker Repository on Quay.io](https://quay.io/repository/joukou/riak/status?token=7d2526bc-fd95-49a4-9caf-91ae6400382c "Docker Repository on Quay.io")](https://quay.io/repository/joukou/riak) [![Apache 2.0](http://img.shields.io/badge/License-apache%202.0-brightgreen.svg)](#license) [![Stories in Ready](https://badge.waffle.io/joukou/joukou-docker-riak.png?label=ready&title=Ready)](http://waffle.io/joukou/joukou-docker-riak) [![IRC](http://img.shields.io/badge/IRC-%23joukou-blue.svg)](irc://irc.freenode.org:6667/#joukou)
 
 [Basho Riak 2.0](http://docs.basho.com/riak/2.0.0/) Dockerfile for
 [CoreOS](https://coreos.com/).
@@ -75,3 +75,5 @@ Basho Riak Dockerfile for CoreOS is under the Apache 2.0 license. See the
 
 Some parts have been derived from code developed at Basho Technologies, and can
 also be found in the [docker-riak sources](https://github.com/hectcastro/docker-riak).
+
+[![Analytics](https://ga-beacon.appspot.com/UA-41911221-2/joukou-docker-riak/readme)](https://github.com/igrigorik/ga-beacon)
