@@ -26,15 +26,7 @@ for that are covered in the
 
 Unstable. In development. Collaboration and pull requests welcome!
 
-## Docker Image
-
-`docker pull quay.io/joukou/riak`
-
-## Base Image
-
-See [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
-
-## Usage With Fleet
+## Usage
 
 Upload the template units to the cluster without starting them:
 
@@ -44,19 +36,9 @@ Start as many instances as you require:
 
 `fleetctl start riak@1.service riak@2.service riak@3.service`
 
-## Usage Without Fleet
+## Base Image
 
-```
-docker run --name riak-config \
--v /etc/riak:/etc/riak \
-quay.io/joukou/riak-config
-
-docker run --name riak \
--v /etc/riak:/etc/riak \
--v /var/lib/riak:/var/lib/riak \
--v /var/log/riak:/var/log/riak \
-quay.io/joukou/riak
-```
+See [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
 
 ## Volumes
 
@@ -64,25 +46,20 @@ quay.io/joukou/riak
 | -------- | ------- |
 | `/etc/riak` | Should contain `riak.conf` and `solr-log4j.properties` |
 | `/var/log/riak` | Riak logs |
-| `/var/lib/riak` | Riak data. The ephemeral nature of Docker containers aside, it is simply not efficient to store data on the union file system. |
+| `/var/lib/riak` | Riak data. The ephemeral nature of Docker containers aside,
+it is simply not efficient to store data on the union file system. |
 
 ## Exposed Ports
 
-| Port      | Network       | Purpose                               |
-| --------- | ------------- | ------------------------------------- |
-| 4370      | intra-cluster | Erlang Port Mapper Daemon (epmd)      |
-| 8087      | intra-cluster | Protocol Buffers API                  |
-| 8088-8092 | intra-cluster | Erlang Distributed Node Protocol      |
-| 8093      | intra-cluster | Solr                                  |
-| 8098      | intra-cluster | HTTP API                              |
-| 8099      | intra-cluster | Intra-Cluster Handoff                 |
-| 8985      | intra-cluster | Solr JMX                              |
-
-`intra-cluster` means that, in my opinion, none of these ports should be
-directly exposed to the public internet.
-
-If, for example, you want to expose the riak control web interface setup a
-reverse proxy container for that purpose.
+| Port      | Purpose                               |
+| --------- | ------------------------------------- |
+| 4370      | Erlang Port Mapper Daemon (epmd)      |
+| 8087      | Protocol Buffers API                  |
+| 8088-8092 | Erlang Distributed Node Protocol      |
+| 8093      | Solr                                  |
+| 8098      | HTTP API                              |
+| 8099      | Intra-Cluster Handoff                 |
+| 8985      | Solr JMX                              |
 
 ## Contributors
 
@@ -90,7 +67,7 @@ reverse proxy container for that purpose.
 
 ## License
 
-Copyright &copy; 2014 Joukou Ltd.
+Copyright &copy; 2009-2014 Joukou Ltd.
 
 Basho Riak Dockerfile for CoreOS is under the Apache 2.0 license. See the
 [LICENSE](LICENSE) file for details.
