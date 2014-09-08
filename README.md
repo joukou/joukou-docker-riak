@@ -46,8 +46,7 @@ See [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
 | -------- | ------- |
 | `/etc/riak` | Should contain `riak.conf` and `solr-log4j.properties` |
 | `/var/log/riak` | Riak logs |
-| `/var/lib/riak` | Riak data. The ephemeral nature of Docker containers aside,
-it is simply not efficient to store data on the union file system. |
+| `/var/lib/riak` | Riak data. The ephemeral nature of Docker containers aside, it is simply not efficient to store data on the union file system. |
 
 ## Exposed Ports
 
