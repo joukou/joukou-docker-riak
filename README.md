@@ -26,6 +26,8 @@ for that are covered in the
 
 Unstable. In development. Collaboration and pull requests welcome!
 
+[![Throughput Graph](https://graphs.waffle.io/joukou/joukou-docker-riak/throughput.svg)](https://waffle.io/joukou/joukou-docker-riak/metrics)
+
 ## Usage
 
 Upload the template units to the cluster without starting them:
