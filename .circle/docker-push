@@ -12,8 +12,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-if [ $CIRCLE_BRANCH = "master" ] || [ $CIRCLE_BRANCH = "develop" ]; then
-  docker push $DOCKER_IMAGE_NAME:`docker-tag-name`
-else
-  printf "Not pushing to Docker registry from branch ${CIRCLE_BRANCH}\n"
-fi
+docker push $DOCKER_IMAGE_NAME:`docker-tag-name`
