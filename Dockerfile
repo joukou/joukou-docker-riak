@@ -18,7 +18,9 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install Basho Riak
 WORKDIR /tmp
-RUN curl -LO http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.0/debian/7/riak_2.0.0-1_amd64.deb && \
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends logrotate && \
+    curl -LO http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.0/debian/7/riak_2.0.0-1_amd64.deb && \
     dpkg -i riak_2.0.0-1_amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
