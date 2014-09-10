@@ -64,7 +64,8 @@ See [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
 
 ## Contributors
 
-[Isaac Johnston](https://github.com/superstructor) ([Joukou Ltd](https://joukou.com))
+* [Isaac Johnston](https://github.com/superstructor) ([Joukou Ltd](https://joukou.com))
+* [Vincent Ambo](https://github.com/tazjin) ([Kivra AB](https://www.kivra.com/))
 
 ## License
 
