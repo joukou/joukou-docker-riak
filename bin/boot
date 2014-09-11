@@ -79,15 +79,6 @@ function riak_set_directory_permissions {
   chmod 755 /var/lib/riak /var/log/riak
 }
 
-# smart shutdown on SIGINT and SIGTERM
-function on_exit() {
-  local riak_pid=$(cat /run/riak.pid)
-  kill -TERM $riak_pid
-  wait $riak_pid 2>/dev/null
-  exit 0
-}
-trap on_exit INT TERM
-
 function riak_main {
   local riak_external_addr=$(get_if_v4_addr $RIAK_EXTERNAL_INTERFACE)
   local riak_nodename="riak@${riak_external_addr}"
@@ -117,13 +108,9 @@ function riak_main {
   # obtain the riak process identifier
   riak getpid > /run/riak.pid
 
-  # while the riak port is listening, everything is OK
-  while [[ ! -z $(netstat -lnt | awk "\$6 == \"LISTEN\" && \$4 ~ \".8098\" && \$1 ~ \"tcp.?\"") ]] ; do
-    sleep 10
-  done
-
-  # if the loop exits, something went wrong
-  exit 1
+  # replace this shell with the riak console
+  exec /sbin/setuser riak "$(ls -d /usr/lib/riak/erts*)/bin/run_erl" "/tmp/riak" \
+       "/var/log/riak" "exec /usr/sbin/riak attach-direct"
 }
 
 riak_main
