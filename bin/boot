@@ -108,9 +108,6 @@ function riak_main {
   riak_update_conf "${riak_nodename}" "${riak_listen_addr}"
   riak_set_directory_permissions
 
-  # open file descriptor limit
-  ulimit -n 65536
-
   # spawn riak in the background
   riak start
 
