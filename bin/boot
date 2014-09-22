@@ -19,18 +19,10 @@
 # This script starts Basho Riak 2.x in a Docker container after some basic
 # initial configuration.
 #
-# By default, Riak will listen on the eth0 interface which is the interface
-# through which a container speaks to the bridge.
-#
-# There are at least two options for clustering Riak.
-#
-# 1. Pass --net="host" to docker run and the environment variables
-#    RIAK_EXTERNAL_INTERFACE and RIAK_LISTEN_INTERFACE
-# 2. Use an overlay network for intra-host container networking such as Rudder
+# Riak will listen on the eth0 interface which is the interface through which a
+# container speaks to the bridge.
 #
 # To set the Erlang cookie for Riak clustering override RIAK_COOKIE
-#
-# If RIAK_LISTEN_ALL is set to "true", Riak will listen on 0.0.0.0
 
 # fail hard and fast even on pipelines
 set -eo pipefail
@@ -38,38 +30,17 @@ set -eo pipefail
 # set debug based on envvar
 [[ $DEBUG ]] && set -x
 
-# configure essential riak defaults
-export RIAK_EXTERNAL_INTERFACE=${RIAK_EXTERNAL_INTERFACE:-eth0}
-export RIAK_LISTEN_INTERFACE=${RIAK_LISTEN_INTERFACE:-eth0}
-export RIAK_LISTEN_ALL=${RIAK_LISTEN_ALL:-true}
-
 # retrieve IPv4 address asigned to the given interface
-function get_if_v4_addr {
-  local interface="${1}"
-  ip -o -4 addr list "${interface}" 2> /dev/null | \
+function get_iface_v4_addr {
+  local iface="${1}"
+  ip -o -4 addr list "${iface}" 2> /dev/null | \
       awk '{print $4}' | \
       cut -d/ -f1
 }
 
-# check if the given value is unset
-function is_unset {
-  local var="${1}"
-  [[ -z $var ]]
-}
-
-# print error for addresses not being set as expected
-function riak_error_addr_unset {
-  local interface="${1}"
-  echo "IP for interface ${interface} is not set."
-  echo "If you used --net=\"host\" make sure to specify the correct interfaces."
-  exit 1
-}
-
 # update riak.conf with nodename and listening address
 function riak_update_conf {
-  export RIAK_NODENAME="${1}"
-  export RIAK_LISTEN_ADDR="${2}"
-  cat /etc/riak/riak.conf.template | envsubst \
+  cat /etc/riak/riak.conf.envsubst | envsubst \
     > /etc/riak/riak.conf
 }
 
@@ -89,23 +60,10 @@ function on_exit() {
 trap on_exit INT TERM
 
 function riak_main {
-  local riak_external_addr=$(get_if_v4_addr $RIAK_EXTERNAL_INTERFACE)
-  local riak_nodename="riak@${riak_external_addr}"
-  local riak_listen_addr
+  export RIAK_ADDR=$(get_iface_v4_addr "eth0")
+  export RIAK_NODENAME="riak@${RIAK_ADDR}"
 
-  if [[ "${RIAK_LISTEN_ALL}" == "true" ]]; then
-    riak_listen_addr="0.0.0.0"
-  else
-    riak_listen_addr=$(get_if_v4_addr $RIAK_LISTEN_INTERFACE)
-  fi
-
-  is_unset $riak_external_addr \
-    && riak_error_addr_unset $RIAK_EXTERNAL_INTERFACE
-
-  is_unset $riak_listen_addr \
-    && riak_error_addr_unset $RIAK_LISTEN_INTERFACE
-
-  riak_update_conf "${riak_nodename}" "${riak_listen_addr}"
+  riak_update_conf
   riak_set_directory_permissions
 
   # spawn riak in the background

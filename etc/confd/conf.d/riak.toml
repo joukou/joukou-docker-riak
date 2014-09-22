@@ -1,0 +1,8 @@
+[template]
+keys = [ "_joukou.com/riak" ]
+owner = "root"
+mode = "0644"
+src = "riak.conf.tmpl"
+dest = "/etc/riak/riak.conf.envsubst"
+check_cmd = "/usr/sbin/riak chkconfig"
+reload_cmd = "/usr/sbin/riak restart"

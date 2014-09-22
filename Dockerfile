@@ -22,7 +22,13 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends logrotate && \
     curl -LO http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.0/debian/7/riak_2.0.0-1_amd64.deb && \
     dpkg -i riak_2.0.0-1_amd64.deb && \
+    rm -f /etc/riak/riak.conf && \
+    mkdir -p /etc/confd/conf.d && \
+    mkdir -p /etc/confd/templates && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ADD etc/confd/templates/riak.conf.tmpl /etc/confd/templates/
+ADD etc/confd/conf.d/riak.toml /etc/confd/conf.d/
 
 # Make Riak's data and log directories volumes
 VOLUME [ "/var/lib/riak", "/var/log/riak" ]
@@ -39,4 +45,5 @@ EXPOSE 4370 8087 8088 8089 8090 8091 8092 8093 8098 8099 8985
 
 # Add boot script
 ADD bin/boot /bin/
-ENTRYPOINT [ "/bin/boot" ]
+CMD [ "/bin/boot" ]
+#ENTRYPOINT [ "/bin/boot" ]
