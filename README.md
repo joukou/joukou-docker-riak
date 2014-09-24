@@ -54,7 +54,7 @@ See [`quay.io/joukou/java`](https://github.com/joukou/joukou-docker-java).
 
 | Port      | Purpose                               |
 | --------- | ------------------------------------- |
-| 4370      | Erlang Port Mapper Daemon (epmd)      |
+| 4369      | Erlang Port Mapper Daemon (epmd)      |
 | 8087      | Protocol Buffers API                  |
 | 8088-8092 | Erlang Distributed Node Protocol      |
 | 8093      | Solr                                  |

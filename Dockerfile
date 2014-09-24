@@ -34,14 +34,14 @@ ADD etc/confd/conf.d/riak.toml /etc/confd/conf.d/
 VOLUME [ "/var/lib/riak", "/var/log/riak" ]
 
 # Expose ports
-#   4370        Erlang Port Mapper Daemon (epmd)
+#   4369        Erlang Port Mapper Daemon (epmd)
 #   8087        Protocol Buffers API
 #   8088-8092   Erlang Distributed Node Protocol
 #   8093        Solr
 #   8098        HTTP API
 #   8099        Intra-Cluster Handoff
 #   8985        Solr JMX
-EXPOSE 4370 8087 8088 8089 8090 8091 8092 8093 8098 8099 8985
+EXPOSE 4369 8087 8088 8089 8090 8091 8092 8093 8098 8099 8985
 
 # Add boot script
 ADD bin/boot /bin/
